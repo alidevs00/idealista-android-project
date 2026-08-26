@@ -11,9 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.idealista.challenge.R
 import com.idealista.challenge.databinding.FragmentListBinding
 import com.idealista.challenge.domain.model.Ad
+import com.idealista.challenge.presentation.common.FavoriteToggleEvent
 import com.idealista.challenge.presentation.common.NavArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -52,7 +54,11 @@ class ListFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state -> render(state) }
+                launch { viewModel.uiState.collect { state -> render(state) } }
+                // Favorite feedback is a one-off event, not screen state (see
+                // CLAUDE.md §3), so it's collected from its own SharedFlow
+                // instead of being derived from click-time state in this Fragment.
+                launch { viewModel.favoriteToggleEvents.collect { event -> showFavoriteSnackbar(event) } }
             }
         }
     }
@@ -71,6 +77,15 @@ class ListFragment : Fragment() {
         }
 
         adapter.submitList(state.ads)
+    }
+
+    private fun showFavoriteSnackbar(event: FavoriteToggleEvent) {
+        val messageRes = if (event == FavoriteToggleEvent.ADDED) {
+            R.string.added_to_favorites
+        } else {
+            R.string.removed_from_favorites
+        }
+        Snackbar.make(binding.root, messageRes, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun navigateToDetail(ad: Ad) {
