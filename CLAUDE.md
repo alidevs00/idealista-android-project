@@ -136,7 +136,7 @@ Within each branch:
 - [x] Domain layer: models, repository interface, use cases
 - [x] Data layer: network, Room, repository impl, DI modules
 - [x] Presentation: list screen (XML + ViewModel) + app wiring (Hilt, MainActivity, NavHostFragment)
-- [ ] Presentation: detail screen (Compose) + navigation
+- [x] Presentation: detail screen (Compose) + navigation
 - [ ] Unit tests (domain, data, viewmodels)
 - [ ] Instrumented/UI tests (Room DAO, Espresso, Compose)
 - [ ] Static analysis (ktlint/detekt) + CI
