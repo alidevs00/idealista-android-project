@@ -5,4 +5,10 @@
     <color name="on_idealista_green">#0A2E1C</color>
     <color name="surface_light">#FFFFFF</color>
     <color name="surface_dark">#121212</color>
+
+    <color name="screen_background">#F7F7F9</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="badge_text">#FFFFFF</color>
 </resources>

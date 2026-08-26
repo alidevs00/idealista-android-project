@@ -3,9 +3,11 @@
     <string name="app_name">idealista Challenge</string>
 
     <!-- List screen -->
+    <string name="list_screen_title">Ads</string>
+    <string name="list_screen_subtitle">Discover your next home</string>
     <string name="ad_thumbnail_content_description">Ad photo</string>
     <string name="toggle_favorite_content_description">Toggle favorite</string>
-    <string name="ad_summary_format">%1$s · %2$d hab · %3$s m²</string>
+    <string name="ad_summary_format">%1$d hab · %2$s m²</string>
     <string name="favorited_since_format">Favorited on %1$s</string>
     <string name="list_empty_title">No ads to show</string>
     <string name="list_error_title">Couldn\'t load the ads</string>
