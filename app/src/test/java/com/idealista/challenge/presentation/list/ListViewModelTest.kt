@@ -9,6 +9,7 @@ import com.idealista.challenge.domain.model.Price
 import com.idealista.challenge.domain.usecase.ObserveAdsUseCase
 import com.idealista.challenge.domain.usecase.RefreshAdsUseCase
 import com.idealista.challenge.domain.usecase.ToggleFavoriteUseCase
+import com.idealista.challenge.presentation.common.FavoriteToggleEvent
 import com.idealista.challenge.testutil.FakeAdsRepository
 import com.idealista.challenge.testutil.MainDispatcherRule
 import kotlinx.coroutines.test.runTest
@@ -91,6 +92,20 @@ class ListViewModelTest {
             viewModel.onFavoriteClick("1")
 
             assertThat(awaitItem().ads.first().isFavorite).isTrue()
+        }
+    }
+
+    @Test
+    fun `favorite click emits an ADDED then REMOVED toggle event`() = runTest {
+        val repository = FakeAdsRepository(baseAds = listOf(sampleAd))
+        val viewModel = viewModel(repository)
+
+        viewModel.favoriteToggleEvents.test {
+            viewModel.onFavoriteClick("1")
+            assertThat(awaitItem()).isEqualTo(FavoriteToggleEvent.ADDED)
+
+            viewModel.onFavoriteClick("1")
+            assertThat(awaitItem()).isEqualTo(FavoriteToggleEvent.REMOVED)
         }
     }
 

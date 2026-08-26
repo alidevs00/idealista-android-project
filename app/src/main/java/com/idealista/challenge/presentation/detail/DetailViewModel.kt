@@ -6,11 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.idealista.challenge.domain.usecase.ObserveAdDetailUseCase
 import com.idealista.challenge.domain.usecase.RefreshAdDetailUseCase
 import com.idealista.challenge.domain.usecase.ToggleFavoriteUseCase
+import com.idealista.challenge.presentation.common.FavoriteToggleEvent
 import com.idealista.challenge.presentation.common.NavArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -32,6 +36,11 @@ class DetailViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
+
+    // Same reasoning as ListViewModel: one-off Snackbar feedback lives outside
+    // UiState so it fires exactly once instead of replaying on recomposition.
+    private val _favoriteToggleEvents = MutableSharedFlow<FavoriteToggleEvent>(extraBufferCapacity = 1)
+    val favoriteToggleEvents: SharedFlow<FavoriteToggleEvent> = _favoriteToggleEvents.asSharedFlow()
 
     init {
         // Same split as ListViewModel: reactive data goes through the observe
@@ -59,6 +68,8 @@ class DetailViewModel @Inject constructor(
     }
 
     fun onFavoriteClick() {
+        val wasFavorite = _uiState.value.adDetail?.isFavorite == true
         viewModelScope.launch { toggleFavorite(propertyCode) }
+        _favoriteToggleEvents.tryEmit(if (wasFavorite) FavoriteToggleEvent.REMOVED else FavoriteToggleEvent.ADDED)
     }
 }

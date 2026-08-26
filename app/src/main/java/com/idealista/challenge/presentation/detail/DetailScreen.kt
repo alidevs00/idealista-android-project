@@ -22,6 +22,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -43,10 +45,16 @@ import com.idealista.challenge.presentation.common.PriceFormatter
 import java.io.IOException
 import java.time.Instant
 
+/**
+ * Stateless screen: all data comes from [uiState], all Snackbar/navigation
+ * plumbing is owned by [DetailFragment] and handed in ([snackbarHostState],
+ * the click callbacks) so this composable stays trivial to preview and test.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
     uiState: DetailUiState,
+    snackbarHostState: SnackbarHostState,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onRetryClick: () -> Unit,
@@ -54,6 +62,7 @@ fun DetailScreen(
 ) {
     Scaffold(
         modifier = modifier,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {},

@@ -11,6 +11,7 @@ import com.idealista.challenge.domain.model.Price
 import com.idealista.challenge.domain.usecase.ObserveAdDetailUseCase
 import com.idealista.challenge.domain.usecase.RefreshAdDetailUseCase
 import com.idealista.challenge.domain.usecase.ToggleFavoriteUseCase
+import com.idealista.challenge.presentation.common.FavoriteToggleEvent
 import com.idealista.challenge.presentation.common.NavArgs
 import com.idealista.challenge.testutil.FakeAdsRepository
 import com.idealista.challenge.testutil.MainDispatcherRule
@@ -95,6 +96,20 @@ class DetailViewModelTest {
             viewModel.onFavoriteClick()
 
             assertThat(awaitItem().adDetail?.isFavorite).isTrue()
+        }
+    }
+
+    @Test
+    fun `favorite click emits an ADDED then REMOVED toggle event`() = runTest {
+        val repository = FakeAdsRepository(baseDetail = baseDetail)
+        val viewModel = viewModel(repository)
+
+        viewModel.favoriteToggleEvents.test {
+            viewModel.onFavoriteClick()
+            assertThat(awaitItem()).isEqualTo(FavoriteToggleEvent.ADDED)
+
+            viewModel.onFavoriteClick()
+            assertThat(awaitItem()).isEqualTo(FavoriteToggleEvent.REMOVED)
         }
     }
 

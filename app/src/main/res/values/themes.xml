@@ -4,6 +4,8 @@
         <item name="colorPrimary">@color/idealista_green_dark</item>
         <item name="colorOnPrimary">@color/on_idealista_green</item>
         <item name="colorSecondary">@color/idealista_green</item>
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/surface_card</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowBackground">@color/screen_background</item>
     </style>
 </resources>

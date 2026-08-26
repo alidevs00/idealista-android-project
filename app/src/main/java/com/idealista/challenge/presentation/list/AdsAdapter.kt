@@ -41,12 +41,11 @@ class AdsAdapter(
 
             price.text = PriceFormatter.format(ad.price)
 
-            val operationLabel = root.context.getString(
+            operationBadge.text = root.context.getString(
                 if (ad.operation == Operation.RENT) R.string.operation_rent else R.string.operation_sale,
             )
             summary.text = root.context.getString(
                 R.string.ad_summary_format,
-                operationLabel,
                 ad.rooms,
                 ad.size.toInt().toString(),
             )
