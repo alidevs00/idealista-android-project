@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="Theme.Idealistaandroidproject" parent="android:Theme.Material.Light.NoActionBar" />
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.IdealistaChallenge" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/idealista_green_dark</item>
+        <item name="colorOnPrimary">@color/on_idealista_green</item>
+        <item name="colorSecondary">@color/idealista_green</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+    </style>
 </resources>
