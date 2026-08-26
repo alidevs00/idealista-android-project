@@ -135,7 +135,7 @@ Within each branch:
       catalog, CLAUDE.md, .gitignore
 - [x] Domain layer: models, repository interface, use cases
 - [x] Data layer: network, Room, repository impl, DI modules
-- [ ] Presentation: list screen (XML + ViewModel) + app wiring (Hilt, MainActivity, NavHostFragment)
+- [x] Presentation: list screen (XML + ViewModel) + app wiring (Hilt, MainActivity, NavHostFragment)
 - [ ] Presentation: detail screen (Compose) + navigation
 - [ ] Unit tests (domain, data, viewmodels)
 - [ ] Instrumented/UI tests (Room DAO, Espresso, Compose)
