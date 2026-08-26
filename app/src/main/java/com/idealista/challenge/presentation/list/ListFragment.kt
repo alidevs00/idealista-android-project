@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.idealista.challenge.R
 import com.idealista.challenge.databinding.FragmentListBinding
 import com.idealista.challenge.domain.model.Ad
@@ -44,6 +45,7 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.adsRecyclerView.adapter = adapter
+        binding.adsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.swipeRefresh.setOnRefreshListener { viewModel.refresh() }
         binding.retryButton.setOnClickListener { viewModel.refresh() }
         binding.errorTitle.text = getString(R.string.list_error_title)
