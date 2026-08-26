@@ -134,7 +134,7 @@ Within each branch:
 - [x] Project setup: verified-compiling Android Studio project, Gradle version
       catalog, CLAUDE.md, .gitignore
 - [x] Domain layer: models, repository interface, use cases
-- [ ] Data layer: network, Room, repository impl, DI modules
+- [x] Data layer: network, Room, repository impl, DI modules
 - [ ] Presentation: list screen (XML + ViewModel) + app wiring (Hilt, MainActivity, NavHostFragment)
 - [ ] Presentation: detail screen (Compose) + navigation
 - [ ] Unit tests (domain, data, viewmodels)
