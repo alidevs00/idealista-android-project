@@ -42,9 +42,16 @@ Requirements: a recent Android Studio install (bundles a compatible JDK).
 
 ## Running the tests
 
+Unit tests (JVM, no device needed):
+
 ```
-./gradlew test                 # unit tests (JVM, no device needed)
-./gradlew connectedAndroidTest # instrumented tests (needs a connected device/emulator)
+./gradlew test
+```
+
+Instrumented tests (needs a connected device or emulator):
+
+```
+./gradlew connectedAndroidTest
 ```
 
 Unit tests cover the domain use cases, the data layer (mappers and the
