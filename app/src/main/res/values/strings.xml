@@ -6,6 +6,7 @@
     <string name="list_screen_title">Ads</string>
     <string name="list_screen_subtitle">Discover your next home</string>
     <string name="ad_thumbnail_content_description">Ad photo</string>
+    <string name="photo_unavailable">Photo not available</string>
     <string name="toggle_favorite_content_description">Toggle favorite</string>
     <string name="added_to_favorites">Added to favorites</string>
     <string name="removed_from_favorites">Removed from favorites</string>
@@ -21,7 +22,11 @@
 
     <!-- Detail screen -->
     <string name="back_content_description">Navigate back</string>
+    <string name="detail_characteristics_title">Details</string>
+    <string name="detail_operation_type_format">%1$s · %2$s</string>
     <string name="detail_description_title">Description</string>
+    <string name="show_more">Show more</string>
+    <string name="show_less">Show less</string>
     <string name="detail_characteristic_rooms">%d rooms</string>
     <string name="detail_characteristic_bathrooms">%d bathrooms</string>
     <string name="detail_characteristic_size">%d m² built</string>
