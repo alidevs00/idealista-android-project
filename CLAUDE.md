@@ -32,13 +32,13 @@ constraint, not an oversight.
 |---------------------|-------------------------------------------|-----|
 | Language             | Kotlin                                     | Required by the challenge. |
 | UI (list)             | XML + View Binding                       | Required by the challenge. |
-| UI (detail)           | Jetpack Compose                          | Bonus, scoped deliberately to one screen to show real fluency in both toolkits without turning the whole app into a rewrite. |
+| UI (detail)           | XML + View Binding, with one Jetpack Compose component embedded via `ComposeView` | The screen itself follows the same XML approach as the list screen (the challenge marks XML as mandatory, Compose as a bonus "alongside" it); the swipeable image gallery is implemented in Compose and embedded as a `ComposeView` inside the XML layout - real Compose/View interop, not a second full screen rewrite. |
 | Async                 | Kotlin Coroutines + Flow / StateFlow     | Standard modern replacement for callbacks/RxJava on Android. |
 | DI                    | Hilt                                     | Official DI on top of Dagger, least boilerplate for an app this size. |
 | Networking            | Retrofit + OkHttp + kotlinx.serialization | Kotlin-first serialization (no reflection), Retrofit is the de-facto standard HTTP client. |
 | Persistence           | Room                                     | Bonus "persistent storage": relational, testable (in-memory DB in tests), first-class Flow support — used to store favorites (`propertyCode` + `favoritedAt`). |
 | Image loading         | Coil                                     | Kotlin-first, works the same way from XML (`ImageView`) and Compose (`AsyncImage`), avoids mixing two image libraries. |
-| Navigation            | Navigation Component (Fragments), single Activity | Standard Android navigation; the detail destination is a Fragment whose whole layout is a `ComposeView`, which is the standard, low-ceremony way to host one Compose screen inside an otherwise-XML app without adopting Compose Navigation. |
+| Navigation            | Navigation Component (Fragments), single Activity | Standard Android navigation; both destinations are XML-based Fragments. |
 | Architecture          | Clean Architecture (single Gradle module, layered by package) | See §3. |
 | Testing               | JUnit4, MockK, kotlinx-coroutines-test, Turbine, Espresso, Compose UI Test | See §6. |
 
@@ -74,14 +74,18 @@ com.idealista.challenge
 │
 ├── presentation/            # MVVM
 │   ├── list/                  # ListFragment (XML), ListViewModel, ListUiState, RecyclerView adapter
-│   ├── detail/                 # DetailFragment (hosts ComposeView), DetailScreen (Compose), DetailViewModel
+│   ├── detail/                 # DetailFragment (XML), HeroImagePager (Compose, embedded via ComposeView), DetailViewModel
 │   └── common/                  # Shared UI bits (formatting, resources)
 │
 └── di/                      # Hilt modules (Network, Database, Repository)
 ```
 
 MVVM on the presentation side: Views (Fragment/Composable) are as dumb as possible,
-ViewModels expose a single immutable `UiState` via `StateFlow`.
+ViewModels expose a single immutable `UiState` via `StateFlow`. One-off UI feedback
+that shouldn't live in that state — e.g. `FavoriteToggleEvent`, which drives the
+"added/removed from favorites" Snackbar on both screens — goes through a separate
+`SharedFlow` instead of being smuggled into `UiState`: a state field would just
+replay the last event on every rotation/recomposition instead of firing once.
 
 ## 4. Coding conventions
 
@@ -94,6 +98,26 @@ ViewModels expose a single immutable `UiState` via `StateFlow`.
   immutable data class per screen.
 - No hardcoded strings/dimens in layouts or Composables — always resources.
 - Prefer constructor injection (Hilt `@Inject constructor`) over field injection.
+
+### Pre-commit checklist
+
+Before turning any change into a commit, whether it's "big" or not:
+
+- [ ] It stays inside the layer it belongs to — no Android/Retrofit/Room imports
+      leaking into `domain`, no navigation/UI logic in a ViewModel, no business
+      logic duplicated in the View layer instead of living once in a
+      ViewModel/use case.
+- [ ] It follows the patterns already established elsewhere in the codebase
+      (e.g. one-off UI events go through a `SharedFlow`, not smuggled into
+      `UiState` — see §3) instead of a local shortcut that only works here.
+- [ ] Comments are in English, and only where they explain *why*, not *what*.
+- [ ] No commented-out code, no leftover debug logging.
+- [ ] Naming doesn't collide or shadow in a confusing way (e.g. a private
+      method and a lambda parameter sharing a name).
+- [ ] If the change touches behavior already covered by unit tests, the tests
+      are updated/extended — not left silently out of date.
+
+This is a deliberate review step before `git commit`, not a one-time pass.
 
 ## 5. Git workflow
 
@@ -127,7 +151,7 @@ Within each branch:
   asserting `Flow`/`StateFlow` emissions.
 - **Instrumented/UI tests** (need a device/emulator): Room DAO test against an
   in-memory database; Espresso test on `ListFragment`; Compose UI test on
-  `DetailScreen`. Not yet written — see roadmap.
+  `DetailFragment`, and a Compose UI test on `HeroImagePager`. Not yet written — see roadmap.
 
 ## 7. Roadmap (kept in sync with commits)
 
