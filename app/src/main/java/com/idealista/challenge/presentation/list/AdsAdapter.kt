@@ -35,8 +35,18 @@ class AdsAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(ad: Ad) = with(binding) {
+            // Reset explicitly on every bind - this view may be recycled from a
+            // row whose image failed to load, and Coil's callbacks below won't
+            // fire again if this exact request is already cached/in flight.
+            thumbnailUnavailable.isVisible = false
             thumbnail.load(ad.thumbnailUrl) {
                 crossfade(true)
+                placeholder(R.drawable.bg_thumbnail_placeholder)
+                error(R.drawable.bg_thumbnail_placeholder)
+                listener(
+                    onError = { _, _ -> thumbnailUnavailable.isVisible = true },
+                    onSuccess = { _, _ -> thumbnailUnavailable.isVisible = false },
+                )
             }
 
             price.text = PriceFormatter.format(ad.price)
