@@ -10,7 +10,7 @@
     <string name="toggle_favorite_content_description">Toggle favorite</string>
     <string name="added_to_favorites">Added to favorites</string>
     <string name="removed_from_favorites">Removed from favorites</string>
-    <string name="ad_summary_format">%1$d hab · %2$s m²</string>
+    <string name="ad_summary_format">%1$d rooms · %2$s m²</string>
     <string name="favorited_since_format">Favorited on %1$s</string>
     <string name="list_empty_title">No ads to show</string>
     <string name="list_error_title">Couldn\'t load the ads</string>
