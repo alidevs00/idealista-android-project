@@ -89,6 +89,7 @@ class ListViewModelTest {
         assertThat(viewModel.uiState.value.ads.first().isFavorite).isFalse()
 
         viewModel.uiState.test {
+            awaitItem() // current value at subscription time, not yet toggled
             viewModel.onFavoriteClick("1")
 
             assertThat(awaitItem().ads.first().isFavorite).isTrue()
