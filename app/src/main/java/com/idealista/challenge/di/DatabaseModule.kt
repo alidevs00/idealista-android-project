@@ -20,7 +20,13 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).build()
+        Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+            // No migrations are written yet (schema has never changed). Falling
+            // back to destroying and recreating the DB on a future version bump
+            // is the right default for this app - the only data at stake is
+            // locally-favorited property codes, not anything irreplaceable.
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     @Singleton

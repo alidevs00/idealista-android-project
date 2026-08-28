@@ -88,11 +88,17 @@ class DetailFragment : Fragment() {
 
     private fun render(state: DetailUiState) {
         val detail = state.adDetail
+        val hasError = state.error != null
 
         binding.loadingIndicator.isVisible = state.isLoading && detail == null
-        binding.errorView.isVisible = state.error != null
-        binding.contentScroll.isVisible = detail != null
-        binding.favoriteButton.isVisible = detail != null
+        binding.errorView.isVisible = hasError
+        // A background refresh can fail while a previously-loaded detail is
+        // still cached (see AdsRepositoryImpl.detailCache) - without the
+        // `!hasError` check here, the error view and the stale content would
+        // both be visible at once, overlapping. Same convention ListFragment
+        // already uses for its own error/content visibility.
+        binding.contentScroll.isVisible = detail != null && !hasError
+        binding.favoriteButton.isVisible = detail != null && !hasError
 
         state.error?.let { error ->
             binding.errorTitle.text = getString(
@@ -122,8 +128,15 @@ class DetailFragment : Fragment() {
             if (detail.isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_border,
         )
 
-        binding.location.text = listOfNotNull(detail.location.district, detail.location.municipality)
+        // The detail endpoint carries no address fields of its own - when there's
+        // no matching list item to fall back on (e.g. a deep link opened before
+        // the list has loaded), district/municipality are both null and there's
+        // nothing meaningful to show, so hide the row instead of an empty gap.
+        val locationText = listOfNotNull(detail.location.district, detail.location.municipality)
             .joinToString(separator = ", ")
+        binding.location.text = locationText
+        binding.location.isVisible = locationText.isNotBlank()
+        binding.locationIcon.isVisible = locationText.isNotBlank()
 
         characteristicsAdapter.submitList(buildCharacteristics(detail.characteristics))
 
