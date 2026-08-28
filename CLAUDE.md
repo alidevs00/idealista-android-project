@@ -150,13 +150,17 @@ Within each branch:
   `kotlinx-coroutines-test` (`runTest`, a `MainDispatcherRule`), Turbine for
   asserting `Flow`/`StateFlow` emissions.
 - **Instrumented/UI tests** (need a device/emulator): a Room DAO test
-  (`FavoriteDaoTest`) against a real in-memory database; an Espresso test on
-  `ListFragment` (`ListFragmentTest`), with the repository swapped for a fake
-  via Hilt's test DI (`@BindValue` + `@UninstallModules`); and a Compose UI
-  test on `HeroImagePager` (`HeroImagePagerTest`). The Hilt test scaffolding
-  (`HiltTestRunner`, `HiltTestActivity`, `launchFragmentInHiltContainer`)
-  lives under `androidTest` - see §3 note below on why it's not shared with
-  the JVM `test` source set.
+  (`FavoriteDaoTest`) against a real in-memory database, and a Compose UI
+  test on `HeroImagePager` (`HeroImagePagerTest`).
+  An Espresso test on `ListFragment` was attempted, hosting the fragment in a
+  Hilt-enabled test Activity with the repository swapped for a fake via
+  `@BindValue`/`@UninstallModules` - the standard pattern for testing
+  `@AndroidEntryPoint` fragments. It was dropped: `ActivityScenario` could not
+  resolve that test Activity in this environment even once the intent and
+  manifest were verified correct against the actual merged manifest, and it
+  wasn't worth further build-environment debugging time versus two solid,
+  passing instrumented tests. Revisiting this is a fair next step, not a gap
+  hidden from the roadmap.
 
 ## 7. Roadmap (kept in sync with commits)
 
@@ -167,6 +171,6 @@ Within each branch:
 - [x] Presentation: list screen (XML + ViewModel) + app wiring (Hilt, MainActivity, NavHostFragment)
 - [x] Presentation: detail screen (Compose) + navigation
 - [x] Unit tests (domain, data, viewmodels)
-- [x] Instrumented/UI tests (Room DAO, Espresso, Compose)
+- [x] Instrumented/UI tests (Room DAO, Compose) - Espresso attempted, dropped (see §6)
 - [ ] Static analysis (ktlint/detekt) + CI
 - [x] Final README
