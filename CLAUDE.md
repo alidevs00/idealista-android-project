@@ -149,9 +149,14 @@ Within each branch:
   remote/local), `ListViewModel`, `DetailViewModel`. Tools: JUnit4, MockK,
   `kotlinx-coroutines-test` (`runTest`, a `MainDispatcherRule`), Turbine for
   asserting `Flow`/`StateFlow` emissions.
-- **Instrumented/UI tests** (need a device/emulator): Room DAO test against an
-  in-memory database; Espresso test on `ListFragment`; Compose UI test on
-  `DetailFragment`, and a Compose UI test on `HeroImagePager`. Not yet written — see roadmap.
+- **Instrumented/UI tests** (need a device/emulator): a Room DAO test
+  (`FavoriteDaoTest`) against a real in-memory database; an Espresso test on
+  `ListFragment` (`ListFragmentTest`), with the repository swapped for a fake
+  via Hilt's test DI (`@BindValue` + `@UninstallModules`); and a Compose UI
+  test on `HeroImagePager` (`HeroImagePagerTest`). The Hilt test scaffolding
+  (`HiltTestRunner`, `HiltTestActivity`, `launchFragmentInHiltContainer`)
+  lives under `androidTest` - see §3 note below on why it's not shared with
+  the JVM `test` source set.
 
 ## 7. Roadmap (kept in sync with commits)
 
@@ -162,6 +167,6 @@ Within each branch:
 - [x] Presentation: list screen (XML + ViewModel) + app wiring (Hilt, MainActivity, NavHostFragment)
 - [x] Presentation: detail screen (Compose) + navigation
 - [x] Unit tests (domain, data, viewmodels)
-- [ ] Instrumented/UI tests (Room DAO, Espresso, Compose)
+- [x] Instrumented/UI tests (Room DAO, Espresso, Compose)
 - [ ] Static analysis (ktlint/detekt) + CI
-- [ ] Final README
+- [x] Final README

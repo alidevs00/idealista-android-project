@@ -93,6 +93,7 @@ class DetailViewModelTest {
         assertThat(viewModel.uiState.value.adDetail?.isFavorite).isFalse()
 
         viewModel.uiState.test {
+            awaitItem() // current value at subscription time, not yet toggled
             viewModel.onFavoriteClick()
 
             assertThat(awaitItem().adDetail?.isFavorite).isTrue()

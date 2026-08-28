@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,13 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.idealista.challenge.R
 import com.idealista.challenge.domain.model.AdImage
+
+/** Stable identifiers for Compose UI tests (see HeroImagePagerTest) - kept as
+ * constants so tests don't couple to visible, potentially-changing text. */
+object HeroImagePagerTestTags {
+    const val PHOTO_UNAVAILABLE = "hero_pager_photo_unavailable"
+    const val PAGER_DOTS = "hero_pager_dots"
+}
 
 /**
  * The only Compose piece of an otherwise XML-based detail screen (see
@@ -71,7 +79,8 @@ fun HeroImagePager(images: List<AdImage>) {
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 16.dp)
+                    .testTag(HeroImagePagerTestTags.PAGER_DOTS),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 repeat(images.size) { index ->
@@ -102,7 +111,8 @@ private fun PhotoUnavailablePlaceholder() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceVariant),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .testTag(HeroImagePagerTestTags.PHOTO_UNAVAILABLE),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
